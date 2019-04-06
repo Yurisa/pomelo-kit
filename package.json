@@ -17,7 +17,7 @@
     "url": "https://github.com/Yurisa/pomelo-kit/issues"
   },
   "homepage": "https://github.com/Yurisa/pomelo-kit#readme",
-  "devDependencies": {
+  "dependencies": {
     "chalk": "^2.4.2",
     "co": "^4.6.0",
     "commander": "^2.20.0",
