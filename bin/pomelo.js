@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 const program = require('commander');
 const pkg = require('../package.json');
-const init = require('./init');
-const list = require('./list');
+const init = require('../lib/init');
+const list = require('../lib/list');
 
 program
   .version(pkg.version)

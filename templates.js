@@ -12,6 +12,10 @@ module.exports = {
       "name":"webpack-multi",
       "path":"bluefox1688/vue-cli-multi-page",
       "desc":"支持多页面编译的vue模板"
+    }, {
+      "name":"vue-webpack",
+      "path":"pomelo-templates/vue-webpack",
+      "desc":"vue的webpack项目"
     }
   ]
 }
