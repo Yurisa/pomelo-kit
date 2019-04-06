@@ -63,25 +63,25 @@ const generator = function *(input) {
 }
 
 function downloadTemplate(path, projectName, isInstall) {
+  const targetPath = `${process.cwd()}/${projectName}`;
   const spanner = ora('  正在构建，请稍等...');
   spanner.start();
   if (fs.existsSync('download')){
     //刪除原文件
     utils.rmdirSync('download');
   }
-  download(path, downloadPath, (err) => {
+
+  download(path, targetPath, (err) => {
     if (err) {
       spanner.stop();
       console.log(chalk.red('构建失败'), err);
       process.exit(0);
     }
-    startBuildProject(spanner, projectName, isInstall)
+    startBuildProject(spanner, targetPath, isInstall)
   })
 }
 
-function startBuildProject(spanner,projectName, isInstall){
-  let targetPath = `${process.cwd()}/${projectName}`;
-  utils.copyDirSync(downloadPath, targetPath);
+function startBuildProject(spanner, targetPath, isInstall){
   if (isInstall) {
     child_process.execSync('npm install', {cwd: targetPath, stdio: 'inherit'})
   }
