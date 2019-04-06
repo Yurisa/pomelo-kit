@@ -10,7 +10,6 @@ const child_process = require('child_process')
 const utils = require('./utils');
 
 const { list } = templates;
-const downloadPath = path.join(__dirname, '../', 'download');
 const prompts = [
   {
     type: 'list',
@@ -20,13 +19,36 @@ const prompts = [
   }
 ];
 
+const questions = [
+  {
+    name: 'projectName',
+    message: '项目的名称',
+    default: 'demo'
+  }, 
+  {
+    name: 'projectVersion',
+    message: '项目的版本号',
+    default: '1.0.0'
+  }, 
+  {
+    name: 'projectDescription',
+    message: '项目的简介',
+    default: `A project named demo`
+  },
+  { 
+    name: 'isInstall', 
+    message: '是否要加载依赖',
+    default: 'Y'
+  }
+];
+
 (() => {
   for (const key in list) {
     if (list.hasOwnProperty(key)) {
       const { name } = list[key];
       prompts[0].choices.push({
        name: name,
-       value: name 
+       value: name
       })
     }
   }
@@ -39,19 +61,11 @@ const generator = function *(input) {
   if (typeof input !== 'string') {
     const answers = yield inquirer.prompt(prompts);
     tempName = answers.tempName;
-    console.log(tempName);
     path = getPath(tempName);
   }
   if (path) {
-    const answers = yield inquirer.prompt([
-      {name: 'projectName', type: 'input', message: '请输入项目名称(demo)'},
-      {name: 'isInstall', type: 'input', message: '是否要加载依赖(Y/n)'}
-    ]);
+    const answers = yield inquirer.prompt(questions);
     let projectName = answers.projectName;
-
-    if (!projectName) {
-      projectName = 'demo';
-    }
     if(answers.isInstall.toLowerCase() === 'n') {
       isInstall = false;
     }
@@ -73,7 +87,7 @@ function downloadTemplate(path, projectName, isInstall) {
 
   download(path, targetPath, (err) => {
     if (err) {
-      spanner.stop();
+      spanner.fail();
       console.log(chalk.red('构建失败'), err);
       process.exit(0);
     }
@@ -85,8 +99,8 @@ function startBuildProject(spanner, targetPath, isInstall){
   if (isInstall) {
     child_process.execSync('npm install', {cwd: targetPath, stdio: 'inherit'})
   }
+  spanner.succeed();
   console.log(chalk.green('项目构建成功'));
-  spanner.stop();
   process.exit(0);
 }
 
